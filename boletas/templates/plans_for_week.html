@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>Plans for: {{ week }}</h1>
+    <ul>
+        {% for plan in weekly_plans %}
+          <li>
+            <a href="{% url 'plan_detail' plan.id %}"> {{ plan.group.name }} </a>
+            - Teacher: {{ plan.user }}
+          </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

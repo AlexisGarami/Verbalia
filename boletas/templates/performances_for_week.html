@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>Performances for: {{ week }}</h1>
+    <ul>
+        {% for performance in weekly_performances %}
+          <li>
+            <a href="{% url 'performance_detail' performance.id %}"> {{ performance.group.name }} </a>
+            - Teacher: {{ performance.user }}
+          </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

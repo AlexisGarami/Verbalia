@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<main class="container-fluid py-5">
+    <section class="card card-body">
+        <h1 class="display-4 text-center mb-4">
+            {% if editing %}
+                Edit Weekly Plan
+            {% else %}
+                Create Weekly Plan
+            {% endif %}
+        </h1>
+        <h2>{{ current_week_label }} - Group: {{ group }}</h2>
+
+        <form method="POST" class="mb-4">
+            {% csrf_token %}
+            {{ formset.management_form }}
+
+            <!-- Cabecera de la tabla con los nombres de los campos -->
+            <table class="table table-bordered w-100">
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">Day</th> <!-- Reservamos un 15% del ancho para el día -->
+                        {% for field in formset.forms.0 %}
+                            {% if not field.name == "day" %}
+                                <th>{{ field.label }}</th>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in formset %}
+                        <tr>
+                            <td>{{ form.day.label }}: {{ form.day }}</td>
+                            {% for field in form %}
+                                {% if not field.name == "day" %}
+                                    <td>
+                                        {{ field }}
+                                        {% if field.errors %}
+                                            <div class="alert alert-danger">
+                                                {{ field.errors }}
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <button type="submit" class="btn btn-dark mt-3">Guardar</button>
+        </form>
+    </section>
+</main>
+{% endblock %}

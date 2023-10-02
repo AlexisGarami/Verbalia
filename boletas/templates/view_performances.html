@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>Weekly Performances</h1>
+    <ul>
+        {% for week in unique_weeks %}
+          <li>
+            <a href="{% url 'performances_for_week' week %}"> {{ week }} </a>
+          </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

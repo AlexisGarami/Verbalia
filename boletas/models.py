@@ -1,0 +1,395 @@
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
+from datetime import timedelta, datetime, time
+
+# Create your models here.
+class Task(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    datecompleted = models.DateTimeField(null=True, blank=True)
+    important = models.BooleanField(default=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
+
+
+class CalificacionAdult(models.Model):
+    student_name = models.CharField(max_length=100)
+    level = models.CharField(max_length=50)
+    unit = models.CharField(max_length=50)
+    unit_exam_grade = models.DecimalField(max_digits=5, decimal_places=2)
+    speaking_grade = models.DecimalField(max_digits=5, decimal_places=2)
+    spelling_grade = models.DecimalField(max_digits=5, decimal_places=2)
+    verbs_grade = models.DecimalField(max_digits=5, decimal_places=2)
+    writing_grade = models.DecimalField(max_digits=5, decimal_places=2)
+    unit_exam_porcentage = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    speaking_porcentage = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    spelling_porcentage = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    verbs_porcentage = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    writing_porcentage = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    total_porcentage = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+
+    def final_average(self):
+        return (self.unit_exam_grade * 0.5) + (self.speaking_grade * 0.2) + (self.spelling_grade * 0.1) + (self.verbs_grade*0.1) + (self.writing_grade*0.1)
+    
+
+    def save(self, *args, **kwargs):
+        #Calculando percentage column
+        self.unit_exam_porcentage = self.unit_exam_grade * 5
+        self.speaking_porcentage = self.speaking_grade * 2
+        self.spelling_porcentage = self.spelling_grade * 1
+        self.verbs_porcentage = self.verbs_grade * 1
+        self.writing_porcentage = self.verbs_grade * 1
+
+        #Calcular percentage total
+        self.total_porcentage = self.unit_exam_porcentage + self.speaking_porcentage + self.spelling_porcentage + self.verbs_porcentage + self.writing_porcentage
+
+        super().save(*args,**kwargs)
+    
+    def __str__(self):
+        return self.student_name +' Unidad: ' + self.unit
+
+
+class Calificacion(models.Model):
+    student_name = models.CharField(max_length=100)
+    level = models.CharField(max_length=50)
+    unit = models.CharField(max_length=50)
+    unit_exam_grade = models.DecimalField(max_digits=5, decimal_places=2)
+    speaking_grade = models.DecimalField(max_digits=5, decimal_places=2)
+    spelling_grade = models.DecimalField(max_digits=5, decimal_places=2)
+    verbs_grade = models.DecimalField(max_digits=5, decimal_places=2)
+    unit_exam_porcentage = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    speaking_porcentage = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    spelling_porcentage = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    verbs_porcentage = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    total_porcentage = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+
+    def final_average(self):
+        return (self.unit_exam_grade * 0.6) + (self.speaking_grade * 0.2) + (self.spelling_grade * 0.1) + (self.verbs_grade*0.1)
+    
+
+    def save(self, *args, **kwargs):
+        #Calculando percentage column
+        self.unit_exam_porcentage = self.unit_exam_grade * 6
+        self.speaking_porcentage = self.speaking_grade * 2
+        self.spelling_porcentage = self.spelling_grade * 1
+        self.verbs_porcentage = self.verbs_grade * 1
+
+        #Calcular percentage total
+        self.total_porcentage = self.unit_exam_porcentage + self.speaking_porcentage + self.spelling_porcentage + self.verbs_porcentage
+
+        super().save(*args,**kwargs)
+    
+    def __str__(self):
+        return self.student_name +' Unidad: ' + self.unit
+    
+
+class Group(models.Model):
+    name = models.CharField(max_length=50)
+    level = models.CharField(max_length=50)
+    schedule = models.CharField(max_length=50)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, editable=True)
+
+
+    def __str__(self):
+        return self.name
+
+
+class Plan(models.Model):
+    DAY_CHOICES = [
+        ('Monday','Monday'),
+        ('Tuesday','Tuesday'),
+        ('Wednesday','Wednesday'),
+        ('Thursday','Thursday'),
+        ('Friday','Friday')
+    ]
+
+    day = models.CharField(
+        max_length=10,
+        choices=DAY_CHOICES,
+    )
+    topic = models.CharField(max_length=50)
+    unit = models.CharField(max_length=50)
+    clase = models.CharField(max_length=50)
+    semana = models.CharField(max_length=50, null=True)
+    activities = models.TextField(max_length=500)
+    book_pages = models.TextField(max_length=100)
+    resources = models.TextField(max_length=500)
+    expected_learning = models.TextField(max_length=500)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    creation_date = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, editable=False)
+    last_modified_date = models.DateTimeField(auto_now=True)
+    is_submitted = models.BooleanField(default=False)
+    week_number = models.PositiveIntegerField(null=True, blank=True)
+    week_start = models.DateField(null=True)
+    week_end = models.DateField(null=True)
+    student_data = models.JSONField(blank=True, null=True)
+    creation_week = models.CharField(max_length=50, null=True)
+
+
+
+    def __str__(self):
+        formatted_date = self.creation_date.astimezone(timezone.get_current_timezone()).strftime("%Y-%m-%d %H:%M:%S")
+        return f"{self.group.name}, Plan: {formatted_date}, Teacher: {self.user}"
+    
+    @staticmethod
+    def is_within_deadline():
+        """ Comprueba si la fecha y hora actual está dentro del plazo de la semana actual """
+        now = timezone.now()
+        # Obtener el próximo sábado
+        next_saturday = now + timedelta((5-now.weekday()) % 7)
+        # Establecer la hora a las 5 pm
+        deadline_time = next_saturday.replace(hour=17, minute=0, second=0, microsecond=0)
+        return now <= deadline_time
+    
+    def save(self, *args, **kwargs):
+        if not self.semana:
+            self.semana = self.calculate_week_label()  
+        super().save(*args, **kwargs)
+
+    @staticmethod
+    def get_start_week_date(today=None):
+        if not today:
+            today = datetime.now()
+
+        # Determinar el último sábado a las 5:01 pm
+        if today.weekday() == 5 and today.time() > time(17,1):
+            return datetime.combine(today.date(), time(17, 1))
+        else:
+            last_saturday = today - timedelta(days=(today.weekday() - 5) % 7, hours=today.hour, minutes=today.minute, seconds=today.second, microseconds=today.microsecond)
+            return datetime.combine(last_saturday, time(17, 1))
+        
+
+    @staticmethod
+    def get_end_week_date(today=None):
+        if not today:
+            today = datetime.now()
+        start_week_date = Plan.get_start_week_date(today)
+        return start_week_date + timedelta(days=7)- timedelta(minutes=1)
+    
+    @staticmethod
+    def get_current_week_label():
+        today = datetime.now()
+        start_week_datetime = Plan.get_start_week_date(today)
+        end_week_datetime = Plan.get_end_week_date(start_week_datetime)
+
+        month_names = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        if start_week_datetime.month != end_week_datetime.month:
+            label = "Semana: {} {} - {} {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, month_names[end_week_datetime.month - 1], end_week_datetime.day)
+        else:
+            label = "{} Semana: {}-{}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
+
+        return label
+
+    def calculate_week_label(self):
+        return self.get_current_week_label()
+    
+    def get_creation_week(self):
+        creation = self.creation_date
+        start_week_datetime = Performance.get_start_week_date(creation)
+        end_week_datetime = Performance.get_end_week_date(start_week_datetime)
+
+        month_names = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        if start_week_datetime.month != end_week_datetime.month:
+            label = "{} {} - {} {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, month_names[end_week_datetime.month - 1], end_week_datetime.day)
+        else:
+            label = "{} semana {}-{}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
+
+        return label
+    
+    
+class Performance(models.Model):
+    semana = models.CharField(max_length=60, null=True)
+    creation_date = models.DateTimeField(auto_now_add=True)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, editable=False)
+    last_modified_date = models.DateTimeField(auto_now=True)
+    is_submitted = models.BooleanField(default=False)
+    week_number = models.PositiveIntegerField(null=True, blank=True)
+    week_start = models.DateField(null=True)
+    week_end = models.DateField(null=True)
+    student_data = models.JSONField(blank=True, null=True)
+    creation_week = models.CharField(max_length=50, null=True)
+
+    def __str__(self):
+        formatted_date = self.creation_date.astimezone(timezone.get_current_timezone()).strftime("%Y-%m-%d %H:%M:%S")
+        group_name = self.group.name if self.group else "No Group"
+        return f"{group_name}, Performance: {formatted_date}, Teacher: {self.user}"
+    
+
+    @staticmethod
+    def is_within_deadline():
+        """ Comprueba si la fecha y hora actual está dentro del plazo de la semana actual """
+        now = timezone.now()
+        # Obtener el próximo sábado
+        next_saturday = now + timedelta((5-now.weekday()) % 7)
+        # Establecer la hora a las 5 pm
+        deadline_time = next_saturday.replace(hour=17, minute=0, second=0, microsecond=0)
+        return now <= deadline_time
+    
+    def save(self, *args, **kwargs):
+        if not self.semana:
+            self.semana = self.calculate_week_label()  
+        super().save(*args, **kwargs)
+
+
+    @staticmethod
+    def get_start_week_date(today=None):
+        if not today:
+            today = datetime.now()
+
+        # Determinar el último sábado a las 5:01 pm
+        if today.weekday() == 5 and today.time() > time(17, 1):
+            return datetime.combine(today.date(), time(17, 1))
+        else:
+            last_saturday = today - timedelta(days=(today.weekday() - 5) % 7, hours=today.hour, minutes=today.minute, seconds=today.second, microseconds=today.microsecond)
+            return datetime.combine(last_saturday, time(17, 1))
+        
+
+    @staticmethod
+    def get_end_week_date(today=None):
+        if not today:
+            today = datetime.now()
+        start_week_date = Performance.get_start_week_date(today)
+        return start_week_date + timedelta(days=7)- timedelta(minutes=1)
+    
+
+    @staticmethod
+    def get_current_week_label():
+        today = datetime.now()
+        start_week_datetime = Performance.get_start_week_date(today)
+        end_week_datetime = Performance.get_end_week_date(start_week_datetime)
+
+        month_names = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        if start_week_datetime.month != end_week_datetime.month:
+            label = "{} {} - {} {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, month_names[end_week_datetime.month - 1], end_week_datetime.day)
+        else:
+            label = "{} semana {}-{}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
+
+        return label
+    
+    def calculate_week_label(self):
+        return self.get_current_week_label()
+
+
+    def get_creation_week(self):
+        creation = self.creation_date
+        start_week_datetime = Performance.get_start_week_date(creation)
+        end_week_datetime = Performance.get_end_week_date(start_week_datetime)
+
+        month_names = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        if start_week_datetime.month != end_week_datetime.month:
+            label = "{} {} - {} {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, month_names[end_week_datetime.month - 1], end_week_datetime.day)
+        else:
+            label = "{} semana {}-{}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
+
+        return label
+    
+
+class StudentEntry(models.Model):
+    student_name = models.CharField(max_length=60)
+    comments = models.TextField(max_length=600)
+    performance = models.ForeignKey(Performance, on_delete=models.CASCADE, related_name='entries')
+
+class Attendance(models.Model):
+    semana = models.CharField(max_length=60)
+    creation_date = models.DateTimeField(auto_now_add=True)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, editable=False)
+    last_modified_date = models.DateTimeField(auto_now=True)
+    is_submitted = models.BooleanField(default=False)
+    week_number = models.PositiveIntegerField(null=True, blank=True)
+    week_start = models.DateField(null=True)
+    week_end = models.DateField(null=True)
+    student_data = models.JSONField(blank=True, null=True)
+    creation_week = models.CharField(max_length=50, null=True)
+
+    def __str__(self):
+        formatted_date = self.creation_date.astimezone(timezone.get_current_timezone()).strftime("%Y-%m-%d %H:%M:%S")
+        group_name = self.group.name if self.group else "No Group"
+        return f"{group_name}, Performance: {formatted_date}, Teacher: {self.user}"
+    
+
+    @staticmethod
+    def is_within_deadline():
+        """ Comprueba si la fecha y hora actual está dentro del plazo de la semana actual """
+        now = timezone.now()
+        # Obtener el próximo sábado
+        next_saturday = now + timedelta((5-now.weekday()) % 7)
+        # Establecer la hora a las 5 pm
+        deadline_time = next_saturday.replace(hour=17, minute=0, second=0, microsecond=0)
+        return now <= deadline_time
+    
+    def save(self, *args, **kwargs):
+        """Extiende la funcionalidad del metodo save() asignando el la etiqueta de week_label a el campo semana"""
+        if not self.semana:
+            self.semana = self.calculate_week_label()  
+        super().save(*args, **kwargs)
+
+
+    @staticmethod
+    def get_start_week_date(today=None):
+        if not today:
+            today = datetime.now()
+
+        # Determinar el último sábado a las 5:01 pm
+        if today.weekday() == 5 and today.time() > time(17, 1):
+            return datetime.combine(today.date(), time(17, 1))
+        else:
+            last_saturday = today - timedelta(days=(today.weekday() - 5) % 7, hours=today.hour, minutes=today.minute, seconds=today.second, microseconds=today.microsecond)
+            return datetime.combine(last_saturday, time(17, 1))
+        
+
+    @staticmethod
+    def get_end_week_date(today=None):
+        if not today:
+            today = datetime.now()
+        start_week_date = Performance.get_start_week_date(today)
+        return start_week_date + timedelta(days=7)- timedelta(minutes=1)
+    
+
+    @staticmethod
+    def get_current_week_label():
+        today = datetime.now()
+        start_week_datetime = Performance.get_start_week_date(today)
+        end_week_datetime = Performance.get_end_week_date(start_week_datetime)
+
+        month_names = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        if start_week_datetime.month != end_week_datetime.month:
+            label = "{} {} - {} {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, month_names[end_week_datetime.month - 1], end_week_datetime.day)
+        else:
+            label = "{} semana {}-{}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
+
+        return label
+    
+    def calculate_week_label(self):
+        return self.get_current_week_label()
+
+
+    def get_creation_week(self):
+        creation = self.creation_date
+        start_week_datetime = Performance.get_start_week_date(creation)
+        end_week_datetime = Performance.get_end_week_date(start_week_datetime)
+
+        month_names = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        if start_week_datetime.month != end_week_datetime.month:
+            label = "{} {} - {} {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, month_names[end_week_datetime.month - 1], end_week_datetime.day)
+        else:
+            label = "{} semana {}-{}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
+
+        return label
+
+
+class AttendanceEntry(models.Model):
+    student_name = models.CharField(max_length=60)
+    attendance = models.ForeignKey(Attendance, on_delete=models.CASCADE, related_name='entries')
+    monday = models.CharField(max_length=1)
+    tuesday = models.CharField(max_length=1)
+    wednesday = models.CharField(max_length=1)
+    thursday = models.CharField(max_length=1)
+    friday = models.CharField(max_length=1)
+

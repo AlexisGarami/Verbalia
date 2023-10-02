@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Detalle de Performance</h1>
+    <p><strong>Profesor:</strong> {{ profesor }}</p>
+    <p><strong>Semana:</strong> {{ current_week_label }}</p>
+
+    <!-- Mostrar los datos de la performance -->
+    <form method="GET">
+        {% csrf_token %}
+        {{ form.as_table }}
+    </form>
+
+    <!-- Mostrar los datos de los estudiantes -->
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre del Estudiante</th>
+                <th>Comentarios</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in formset %}
+                <tr>
+                    <td>{{ entry.student_name.value }}</td>
+                    <td>{{ entry.comments.value }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

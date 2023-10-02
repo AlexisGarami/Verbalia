@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>
+    {% if editing %}
+        Edit Weekly Attendance
+    {% else %}
+        Create Weekly Attendance
+    {% endif %}
+</h1>
+<h2>{{current_week_label}} - Group: {{ group }} </h2>
+<p><strong>Note:</strong> A=Asistió, R=Retardo, F=Falta</p>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ formset.management_form }}
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for form in formset %}
+            <tr>
+                <td>{{ form.student_name }}</td>
+                <td>{{ form.monday }}</td>
+                <td>{{ form.tuesday }}</td>
+                <td>{{ form.wednesday }}</td>
+                <td>{{ form.thursday }}</td>
+                <td>{{ form.friday }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-dark mt-3">Guardar</button>
+</form>
+{% endblock %}

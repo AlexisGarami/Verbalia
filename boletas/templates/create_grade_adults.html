@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <main class="container py-5">
+        <section class="card card-body">
+            <h1 class="display-4 text-center mb-4">Create Grade Adults</h1>
+            <form method="POST" class="mb-4">
+                {% csrf_token %}
+                
+                {{ form.student_name.label_tag }} 
+                {{ form.student_name }}
+
+                {{ form.level.label_tag }} 
+                {{ form.level }}
+
+                {{ form.unit.label_tag }} 
+                {{ form.unit }}
+
+                {{ form.unit_exam_grade.label_tag }} 
+                {{ form.unit_exam_grade }}
+
+                {{ form.speaking_grade.label_tag }} 
+                {{ form.speaking_grade }}
+
+                {{ form.spelling_grade.label_tag }} 
+                {{ form.spelling_grade }}
+
+                {{ form.verbs_grade.label_tag }} 
+                {{ form.verbs_grade }}
+
+                {{ form.writing_grade.label_tag }} 
+                {{ form.writing_grade }}
+
+                <button class="btn btn-dark mt-3">
+                    Save
+                </button>
+            </form>
+        </section>
+    </main>
+{% endblock %}

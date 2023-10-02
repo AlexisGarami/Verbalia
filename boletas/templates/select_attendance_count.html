@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="container py-5">
+    <section class="card card-body">
+        <h1 class="display-4 text-center mb-4">Attendance Lists</h1>
+        
+        <form method="POST" class="mb-4">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="student_count" class="form-label">Seleccione la cantidad de alumnos: </label>
+                <select name="student_count" id="student_count" class="form-select">
+                    {% for i in "123456789"|make_list %}
+                    <option value="{{ i }}">{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-dark">Continuar</button>
+            </div>
+        </form>
+    </section>
+</main>
+{% endblock %}

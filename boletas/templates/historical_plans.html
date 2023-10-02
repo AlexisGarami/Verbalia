@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Planes Históricos</h1>
+
+<ul>
+    {% for plan in plans %}
+        <li>{{ plan.week_start }} - {{ plan.week_end }}: {{ plan.description }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
