@@ -1,14 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-    <h1>Attendances for: {{ week }}</h1>
-    <ul>
-        {% for attendance in weekly_attendances %}
-          <li>
-            <a href="{% url 'attendance_detail' attendance.id %}"> {{ attendance.group.name }} </a>
-            - Teacher: {{ attendance.user }}
-          </li>
-        {% endfor %}
-    </ul>
+<main class="container py-5">
+    <section class="card card-body">
+        <h1 class="display-4 text-center mb-4">Attendances for: {{ week }}</h1>
+        <hr>
+        <ul class="list-unstyled text-center">
+            {% for attendance in weekly_attendances %}
+                <li class="mb-2">
+                    <a href="{% url 'attendance_detail' attendance.id %}" class="btn btn-dark">
+                        {{ attendance.group.name }} - Teacher: {{ attendance.user }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+</main>
 {% endblock %}
+

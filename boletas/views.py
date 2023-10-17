@@ -4,15 +4,16 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
-from .forms import TaskForm, GradeForm, PlanForm, PerformanceForm, StudentEntryForm, AttendanceForm, AttendanceEntryForm, GradeAdultForm
+from .forms import TaskForm, GradeForm, PlanForm, PerformanceForm, StudentEntryForm, AttendanceForm, AttendanceEntryForm, GradeAdultForm, GradeBabiesForm, ResponsibilityNoteForm, CommentForm
 from reportlab.lib.pagesizes import landscape, letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Spacer, Image
-from .models import Task, Group, Plan, Performance, Attendance
+from .models import Task, Group, Plan, Performance, Attendance, ResponsibilityNote, Comment
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.forms import formset_factory
 from django.contrib import messages
-from django.forms.models import model_to_dict
+from .helpers import check_assignments_for_user, check_plans_for_user, check_performances_for_user
+
 
 # Create your views here.
 
@@ -300,6 +301,109 @@ def generate_pdf2(grade_instance, request):
     return response
 
 
+def generate_pdf3(grade_instance, request):
+
+    data1 = [['AREA', ' ', 'GRADE EXAM', ' ', 'PERCENTAGE'], [''],
+             ['Unit Exam (40%)', ' ---------- ', str(grade_instance.unit_exam_grade),
+              ' --------- ', str(grade_instance.unit_exam_porcentage)+'%'], [''],
+             ['Speaking (20%)', ' ---------- ', str(grade_instance.speaking_grade),
+              ' --------- ', str(grade_instance.speaking_porcentage)+'%'], [''],
+             ['Spelling (20%)', ' ---------- ', str(grade_instance.spelling_grade),
+              ' --------- ', str(grade_instance.spelling_porcentage)+'%',], [''],
+             ['Pronunciation (20%)', ' ---------- ', str(grade_instance.pronunciation_grade), ' ---------- ', str(grade_instance.pronunciation_porcentage)+'%',], ['']]
+    
+
+    data2 = [[" ", "STUDENT'S INFORMATION",], [''], [''],
+             ["Student's Name: \n\n" + grade_instance.student_name, ' ',
+                 'Level:  \n\n' + '       '+grade_instance.level + '        '], [''],
+             [' ', 'Unit: ' + grade_instance.unit, ' '], [''],]
+  
+    imagen_path = "boletas/pdf_images/firma_gabriel.png"  
+    firma = Image(imagen_path, width=295, height=125)
+
+    data3 = [['','FINAL AVERAGE: \n\n' + str(grade_instance.total_porcentage/10) + '\n',], 
+             ['         ',firma,'']]
+    
+    path1 = "boletas/pdf_images/LOGO.jpeg"  
+    logo1 = Image(path1, width=60, height=55)
+    path2 = "boletas/pdf_images/logo2.png"  
+    logo2 = Image(path2, width=80, height=50)
+
+    data4 = [[logo1,'                  ', '                          Grades Summary\n\n', '                   ', logo2]]
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'filename="calificaciones_report.pdf"'
+
+    doc = SimpleDocTemplate(response, pagesize=landscape(letter), leftMargin=0, rightMargin=0, topMargin=0, bottomMargin=0)
+
+
+    table1 = Table(data1)
+    style1 = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 1), 'cadetblue'),
+        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 14),
+        ('BACKGROUND', (0, 4), (-1, 5), 'aliceblue'),
+        ('BACKGROUND', (0, 8), (-1, 9), 'aliceblue'),
+    ])
+    table1.setStyle(style1)
+
+    table2 = Table(data2)
+    style2 = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 1), 'cadetblue'),
+        ('BACKGROUND', (0, 2), (-1, -1), 'aliceblue'),
+        ('BACKGROUND', (0, 5), (-1, -1), 'cadetblue'),
+        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
+        ('TEXTCOLOR', (0, 5), (-1, -1), 'white'),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica'),
+        ('FONTNAME', (0, 5), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 17),
+        ('FONTNAME', (0, 2), (-1, -3), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 2), (-1, -3), 16),
+    ])
+    table2.setStyle(style2)
+
+    table3 = Table(data3)
+    style3 = TableStyle([
+        ('BACKGROUND', (1, 0), (1,0 ), 'cadetblue'),
+        ('TEXTCOLOR', (0, 0), (-1, 0), 'black'),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, -1), 14),
+        ('GRID', (1, 0), (1, 0), 0.1, 'mintcream'),
+        ('GRID', (1, 0), (1, 0), 0.1, 'lightgrey'),
+    ])
+    table3.setStyle(style3)
+
+    table4 = Table(data4)
+    style4 = TableStyle([
+        ('TEXTCOLOR', (2, 0), (2,0), 'black'),
+        ('ALIGN', (2, 0), (2,0), 'CENTER'),
+        ('FONTNAME', (2, 0), (2,0), 'Helvetica-Bold'),
+        ('FONTSIZE', (2, 0), (2,0), 19),
+        ('TEXTCOLOR', (3, 0), (3,0), 'cadetblue'),
+        ('FONTNAME', (3, 0), (3,0), 'Helvetica-Bold'),
+        ('FONTSIZE', (3, 0), (3,0), 30),
+    ])
+    table4.setStyle(style4)
+
+    elements = []
+    elements.append(Spacer(0, 4))
+    elements.append(table4)
+    elements.append(Spacer(0, 5))
+    elements.append(table2)
+    elements.append(Spacer(0, 10))
+    elements.append(table1)
+    elements.append(Spacer(0, 5))
+    elements.append(table3)
+
+    doc.build(elements)
+
+    return response
+
+
 def create_grade(request):
     if request.method == 'POST':
         form = GradeForm(request.POST)
@@ -310,6 +414,19 @@ def create_grade(request):
         form = GradeForm()  
 
     return render(request, 'create_grade.html', {
+        'form': form
+    })
+
+def create_grade_babies(request):
+    if request.method == 'POST':
+        form = GradeBabiesForm(request.POST)
+        if form.is_valid():
+            grade_instance = form.save()
+            return generate_pdf3(grade_instance, request)
+    else:
+        form = GradeBabiesForm()  
+
+    return render(request, 'create_grade_babies.html', {
         'form': form
     })
 
@@ -335,7 +452,7 @@ def signin(request):
             })
         else:
             login(request, user)
-            return redirect('home')
+            return redirect('responsibility_table')
 
 @login_required
 def task_detail(request, task_id):
@@ -378,7 +495,6 @@ def create_plan(request, group_id):
     week_end = Plan.get_end_week_date()
     current_week_label = Plan.get_current_week_label()
 
-    # Verifica si esta dentro del plazo acordado
     if not Plan.is_within_deadline():
         messages.error(request, 'El plazo para enviar el plan de esta semana ha terminado. Por favor, vuelva a cargar la página.')
         return redirect('create_plan', group_id=group_id)
@@ -473,9 +589,7 @@ def create_performance(request, group_id, student_count):
     week_end = Performance.get_end_week_date()
     current_week_label = Performance.get_current_week_label()
 
-    if not Performance.is_within_deadline():
-        messages.error(request, 'El plazo para enviar acabo.')
-        return redirect(create_performance, group_id=group_id)
+    
 
 
     if request.method == 'POST':
@@ -557,16 +671,18 @@ def select_attendance_count(request, group_id):
 def create_attendance(request, group_id, student_count):
     AttendanceEntryFormSet = formset_factory(AttendanceEntryForm, extra=int(student_count))
     user = request.user
-    week_start = Performance.get_start_week_date()
-    week_end = Performance.get_end_week_date()
-    current_week_label = Performance.get_current_week_label()
+    week_start = Attendance.get_start_week_date()
+    week_end = Attendance.get_end_week_date()
+    current_week_label = Attendance.get_current_week_label()
     group = Group.objects.get(pk=group_id)
 
-    if not Attendance.is_within_deadline():
-        messages.error(request, 'El plazo para enviar acabó.')
-        return redirect(create_attendance, group_id=group_id)
+    
+    
 
     if request.method == 'POST':
+        if not Attendance.is_within_deadline():
+            messages.error(request, 'El plazo para enviar acabó. Se ha recargado la página para la nueva semana.')
+            return redirect(create_attendance, group_id=group_id, student_count=student_count)
         form = AttendanceForm(request.POST)
         formset = AttendanceEntryFormSet(request.POST, prefix='studententry')
 
@@ -710,7 +826,7 @@ def edit_attendance(request, attendance_id):
             attendance.student_data = [entry.cleaned_data for entry in formset]
             attendance.save()
 
-            return redirect('edit_attendance', attendance_id=attendance_id)
+            return redirect('inicio_attendance')
         
     else:
         form = AttendanceForm(instance=attendance_instance)
@@ -743,7 +859,7 @@ def view_attendances(request):
 
 
 def view_plans(request):
-    unique_weeks = Attendance.objects.values_list('creation_week', flat=True).distinct()
+    unique_weeks = Plan.objects.values_list('creation_week', flat=True).distinct()
 
     return render(request, 'view_plans.html', {
         'unique_weeks':unique_weeks
@@ -755,6 +871,8 @@ def performance_detail(request, performance_id):
     current_week_label = Performance.get_current_week_label()
     StudentEntryFormSet = formset_factory(StudentEntryForm,  extra=0)
     profesor = performance_instance.user
+    group = performance_instance.group
+    week = performance_instance.creation_week
 
     if request.method == 'GET':
         form = PerformanceForm(instance=performance_instance)
@@ -765,6 +883,8 @@ def performance_detail(request, performance_id):
                 'formset':formset,
                 'current_week_label':current_week_label,
                 'profesor':profesor,
+                'group':group,
+                'week':week
             })
 
 
@@ -773,6 +893,8 @@ def attendance_detail(request, attendance_id):
     current_week_label = Attendance.get_current_week_label()
     StudentEntryFormSet = formset_factory(AttendanceEntryForm, extra=0)
     profesor = attendance_instance.user
+    group = attendance_instance.group
+    week = attendance_instance.creation_week
 
     if request.method == 'GET':
         form = AttendanceForm(instance=attendance_instance)
@@ -784,6 +906,8 @@ def attendance_detail(request, attendance_id):
             'formset':formset,
             'current_week_label':current_week_label,
             'profesor':profesor,
+            'group':group,
+            'week':week
         })
     
 
@@ -792,6 +916,8 @@ def plan_detail(request, plan_id):
     current_week_label = Plan.get_current_week_label()
     PlanEntryFormSet = formset_factory(PlanForm, extra=0)
     profesor = plan_instance.user
+    group = plan_instance.group
+    week = plan_instance.creation_week
 
     if request.method == 'GET':
         initial_data = plan_instance.student_data
@@ -805,6 +931,8 @@ def plan_detail(request, plan_id):
         'form_data':form_data,
         'current_week_label':current_week_label,
         'profesor':profesor,
+        'group':group,
+        'week':week
     })
 
 
@@ -834,4 +962,73 @@ def plans_for_week(request, week):
     return render(request, 'plans_for_week.html', {
         'weekly_plans':weekly_plans,
         'week':week
+    })
+
+
+def grades(request):
+    return render(request, 'grades.html')
+
+
+def responsibility_table(request):
+    
+    excluded_users = ['mireyaramirez', 'gabrielpeña', 'charmander']
+    teachers = User.objects.exclude(username__in=excluded_users).order_by('id')
+
+    table_data = []
+    for teacher in teachers:
+        # Aquí intentamos obtener la nota de responsabilidad para el maestro.
+        try:
+            note = ResponsibilityNote.objects.get(user=teacher)
+            responsibility_note = note.note
+        except ResponsibilityNote.DoesNotExist:
+            responsibility_note = None  # o algún valor por defecto
+
+        teacher_data = {
+            "name": teacher.username,
+            "plans_submitted": check_plans_for_user(teacher),  
+            "performances_submitted": check_performances_for_user(teacher),  
+            "attendances_submitted": check_assignments_for_user(teacher),  
+            "responsibility_note": responsibility_note  # Agregamos la nota aquí
+        }
+        table_data.append(teacher_data)
+
+    comments = Comment.objects.all().order_by('-timestamp')  # Obtener todos los comentarios, ordenados por fecha descendente
+
+    comment_form = CommentForm(request.POST or None)
+    if request.method == 'POST' and comment_form.is_valid():
+        new_comment = comment_form.save(commit=False)
+        new_comment.user = request.user
+        new_comment.save()
+
+        return redirect('responsibility_table')
+
+    context = {
+        'table_data': table_data,
+        'week_label': Attendance.get_current_week_label(),
+        'comments': comments,
+        'comment_form': comment_form,
+    }
+
+    return render(request, 'responsibility_table.html', context)
+
+
+def edit_responsibility_notes(request):
+    if request.method == 'POST':
+        # Asumiendo que estás enviando el ID del usuario y la nueva nota.
+        user_id = request.POST.get('user_id')
+        new_note = request.POST.get('new_note')
+
+        # Buscar o crear la nota de responsabilidad para ese usuario.
+        note, created = ResponsibilityNote.objects.get_or_create(user_id=user_id)
+        note.note = new_note
+        note.save()
+        print("User ID:", user_id)  # Añadido para depuración
+        print("New Note:", new_note)  # Añadido para depuración
+        return redirect('edit_responsibility_notes') # O a donde quieras redirigir después de guardar la nota.
+    
+
+    # Si es GET, simplemente mostramos el formulario.
+    users = User.objects.all() # O algún filtro si no quieres todos los usuarios
+    return render(request, 'edit_responsibility_notes.html',{
+        'users':users
     })

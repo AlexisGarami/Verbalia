@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="container py-5">
+    <section class="card card-body">
+        <h1 class="display-4 text-center mb-4">Create Grade</h1>
+        <hr>
+        <ul class="list-unstyled text-center">
+            <li class="mb-2"><a href="{% url 'create_grade' %}" class="btn btn-dark">Create Grade Kids </a></li>
+            <li class="mb-2"><a href="{% url 'create_grade_adults' %}" class="btn btn-dark">Create Grade Adults</a></li>
+            <li><a href="{% url 'create_grade_babies' %}" class="btn btn-dark">Create Grade Babies</a></li>
+        </ul>
+    </section>
+</main>
+{% endblock %}

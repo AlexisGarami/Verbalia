@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="container py-2">
+    <div class="row"> <!-- Añadimos una fila -->
+
+        <!-- Columna para la tabla de responsabilidad -->
+        <div class="col-lg-8">
+            <section class="card card-body">
+                <h1 class="display-4 text-center ">Teacher Submission Status</h1>
+                <h5 class="display-7 text-center ">- {{ week_label }} -</h5>
+                <hr>
+
+                <table class="table table-bordered table-striped text-center">
+                    <thead>
+                        <tr>
+                            <th>Teacher</th>
+                            <th> - Plans</th>
+                            <th> Performances</th>
+                            <th> Attendances</th>
+                            <th> Last Week Responsibility Rate </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in table_data %}
+                        <tr>
+                            <td>{{ row.name }}</td>
+                            <td>{{ row.plans_submitted|yesno:"✅,❌" }}</td>
+                            <td>{{ row.performances_submitted|yesno:"✅,❌" }}</td>
+                            <td>{{ row.attendances_submitted|yesno:"✅,❌" }}</td>
+                            <td>{{ row.responsibility_note }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+        <!-- Columna para la sección de comentarios -->
+        <div class="col-lg-4 pr-0"> <!-- Nota: pr-0 remueve el padding derecho -->
+            <section class="card card-body h-100">
+                <h2 class="display-4 text-center mb-4">Comments</h2>
+                <hr> 
+
+                <!-- Sección para mostrar los comentarios -->
+                <ul class="list-unstyled">
+                    {% for comment in comments %}
+                    <li class="my-2">
+                        <strong>{{ comment.user.username }}</strong> {{ comment.timestamp|date:"d M, Y H:i" }}: {{ comment.comment_text }}
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                <!-- Formulario para agregar un nuevo comentario -->
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="comment-text" class="form-label">Write something:</label>
+                        <textarea name="comment_text" id="comment-text" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Comment</button>
+                </form>
+            </section>
+        </div>
+
+    </div> <!-- Fin de la fila -->
+</main>
+{% endblock %}
+

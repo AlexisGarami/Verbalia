@@ -12,7 +12,7 @@
             {% for group in groups %}
             <li class="my-2">
                 {% if group.plan %}
-                    <a href="{% url 'edit_plan' group.plan.id %}" class="btn btn-dark">{{ group.name }} ✅ Editar </a>
+                    <a href="{% url 'edit_plan' group.plan.id %}" class="btn btn-dark">{{ group.name }} ✓ Editar </a>
                 {% else %}
                     <a href="{% url 'create_plan' group.id %}" class="btn btn-secondary">{{ group.name }}</a>
                 {% endif %}

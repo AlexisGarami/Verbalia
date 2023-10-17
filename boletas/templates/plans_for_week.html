@@ -1,14 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-    <h1>Plans for: {{ week }}</h1>
-    <ul>
-        {% for plan in weekly_plans %}
-          <li>
-            <a href="{% url 'plan_detail' plan.id %}"> {{ plan.group.name }} </a>
-            - Teacher: {{ plan.user }}
-          </li>
-        {% endfor %}
-    </ul>
+<main class="container py-5">
+    <section class="card card-body">
+        <h1 class="display-4 text-center mb-4">Plans for: {{ week }}</h1>
+        <hr>
+        <ul class="list-unstyled text-center">
+            {% for plan in weekly_plans %}
+                <li class="mb-2">
+                    <a href="{% url 'plan_detail' plan.id %}" class="btn btn-dark">
+                        {{ plan.group.name }} - Teacher: {{ plan.user }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+</main>
 {% endblock %}

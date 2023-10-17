@@ -1,33 +1,40 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<main class="container-fluid py-5">
+    <section class="card card-body">
+        <h1 class="display-4 text-center mb-4">Detalle de Performance</h1>
 
-<h1>Detalle de Performance</h1>
-    <p><strong>Profesor:</strong> {{ profesor }}</p>
-    <p><strong>Semana:</strong> {{ current_week_label }}</p>
+        <p class="lead"><strong>Profesor:</strong> {{ profesor }}</p>
+        <p class="lead"><strong>Week:</strong> {{ week }}</p>
+        <p class="lead"><strong>Group:</strong> {{ group }}</p>
+        
 
-    <!-- Mostrar los datos de la performance -->
-    <form method="GET">
-        {% csrf_token %}
-        {{ form.as_table }}
-    </form>
+        <!-- Mostrar los datos de la performance -->
+        <form method="GET" class="mb-4">
+            {% csrf_token %}
+            <table class="table table-sm table-bordered">
+                {{ form.as_table }}
+            </table>
+        </form>
 
-    <!-- Mostrar los datos de los estudiantes -->
-    <table>
-        <thead>
-            <tr>
-                <th>Nombre del Estudiante</th>
-                <th>Comentarios</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for entry in formset %}
+        <!-- Mostrar los datos de los estudiantes -->
+        <table class="table table-bordered">
+            <thead>
                 <tr>
-                    <td>{{ entry.student_name.value }}</td>
-                    <td>{{ entry.comments.value }}</td>
+                    <th>Nombre del Estudiante</th>
+                    <th>Comentarios</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
+            </thead>
+            <tbody>
+                {% for entry in formset %}
+                    <tr>
+                        <td>{{ entry.student_name.value }}</td>
+                        <td>{{ entry.comments.value }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</main>
 {% endblock %}

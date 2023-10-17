@@ -1,13 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-    <h1>Weekly Plans</h1>
-    <ul>
-        {% for week in unique_weeks %}
-          <li>
-            <a href="{% url 'plans_for_week' week %}"> {{ week }} </a>
-          </li>
-        {% endfor %}
-    </ul>
+<main class="container py-5">
+    <section class="card card-body">
+        <h1 class="display-4 text-center mb-4">Weekly Plans</h1>
+        <hr>
+        <ul class="list-unstyled text-center">
+            {% for week in unique_weeks %}
+                <li class="mb-2">
+                    <a href="{% url 'plans_for_week' week %}" class="btn btn-dark">{{ week }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+</main>
 {% endblock %}

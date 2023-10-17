@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,36 +12,47 @@
     
     <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="#"><h3>VERBALIA</h3><h6>Aprende, habla, conecta.</h6></a>
+            <a class="navbar-brand" href="#"><img src="{% static 'LOGONUEVO2.png' %}" alt="Verbalia Logo" height="80" width="auto"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                <a href="/" class="nav-link">Home</a>
-                </li>
+                
                 
                 {% if user.is_authenticated %}
+                
+                <li class="nav-item">
+                    <a href="/inicio_plan" class="nav-link">
+                        Plans {% if plans_completados %}🎉{% endif %} |
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/inicio_performance" class="nav-link">
+                        Performances {% if performances_completados %}🎉{% endif %} |
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/inicio_attendance" class="nav-link">
+                        Attendances {% if todos_completados %}🎉{% endif %} |
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/grades" class="nav-link">Create Grades |</a> 
+                </li>
+                <li class="nav-item">
+                    <a href="/responsibility_table" class="nav-link">Responsibility Table |</a>
+                </li>
+                <li class="nav-item">
+                    <a href="/" class="nav-link">Home |</a>
+                </li>
                 <li class="nav-item">
                     <a href="/signout" class="nav-link">Signout</a>
                 </li>
-                <li class="nav-item">
-                    <a href="/create_grade" class="nav-link">Create Grade</a>
-                </li>
-                <li class="nav-item">
-                    <a href="/create_grade_adults" class="nav-link">Create Grade Adults</a>
-                </li>
-                <li class="nav-item">
-                    <a href="/inicio_plan" class="nav-link">Weekly Plan</a>
-                </li>
-                <li class="nav-item">
-                    <a href="/inicio_performance" class="nav-link">Weekly Performance</a>
-                </li>
-                <li class="nav-item">
-                    <a href="/inicio_attendance" class="nav-link">Attendance Lists</a>
-                </li>
                 {% else %}
+                <li class="nav-item">
+                    <a href="/" class="nav-link">Home</a>
+                </li>
                 <li class="nav-item">
                     <a href="/signup" class="nav-link">Signup</a>
                 </li>
@@ -55,12 +67,13 @@
     <nav>
         <ul>    
                 {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a href="/tasks" class="nav-link">Tasks</a>
-                </li>
-                    {% if user.username == "mireyaramirez" or user.username == "alexisgalicia" %}
+                
+                    {% if user.username == "mireyaramirez" or user.username == "alexisgalicia" or user.username == 'alineramirez' or user.username == "gabrielpeña" %}
                     <li class="nav-item">
                         <a href="/view_performances" class="nav-link">View Performances</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/edit_responsibility_notes" class="nav-link">Responsibility Notes</a>
                     </li>
                     <li class="nav-item">
                         <a href="/view_attendances" class="nav-link">View Attendances</a>
@@ -68,10 +81,17 @@
                     <li class="nav-item">
                         <a href="/view_plans" class="nav-link">View Plans</a>
                     </li>
+                    <li class="nav-item">
+                        <a href="/tasks" class="nav-link">Tasks</a>
+                    </li>
                     {% endif %}
                 {% endif %}
         </ul>
     </nav>
+    {% if user.is_authenticated %}
+    <h5> Welcome Teacher: {{ user.first_name }} {{ user.last_name }}!
+    </h5>
+    {% endif %}
 
 
     {% block content %}

@@ -32,6 +32,7 @@ urlpatterns = [
     path('create_task/', views.create_task, name='create_task'),
     path('create_grade/', views.create_grade, name='create_grade'),
     path('create_grade_adults/', views.create_grade_adults, name='create_grade_adults'),
+    path('create_grade_babies/', views.create_grade_babies, name='create_grade_babies'),
     path('inicio_plan/', views.inicio_plan, name='inicio_plan'),
     path('create_plan/<int:group_id>/', views.create_plan, name='create_plan'),
     path('inicio_performance/', views.inicio_performance, name='inicio_performance'),
@@ -52,5 +53,8 @@ urlpatterns = [
     path('performances_for_week/<str:week>/', views.performances_for_week, name='performances_for_week'),
     path('attendances_for_week/<str:week>/', views.attendances_for_week, name='attendances_for_week'),
     path('plans_for_week/<str:week>/', views.plans_for_week, name='plans_for_week'),
+    path('grades', views.grades, name='grades'),
+    path('responsibility_table/', views.responsibility_table, name='responsibility_table'),
+    path('edit_responsibility_notes/', views.edit_responsibility_notes, name='edit_responsibility_notes'),
 
 ]

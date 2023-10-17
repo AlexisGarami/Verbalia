@@ -12,7 +12,7 @@
             {% for group in groups %}
             <li class="text-center my-2"> 
                 {% if group.attendance %}
-                    <a href="{% url 'edit_attendance' group.attendance.id %}" class="btn btn-dark">{{ group.name }} ✅ Editar </a>
+                    <a href="{% url 'edit_attendance' group.attendance.id %}" class="btn btn-dark">{{ group.name }} ✓ Editar </a>
                 {% else %}
                     <a href="{% url 'select_attendance_count' group.id %}" class="btn btn-secondary">{{ group.name }}</a>
                 {% endif %}

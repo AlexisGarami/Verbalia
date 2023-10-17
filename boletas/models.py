@@ -87,6 +87,40 @@ class Calificacion(models.Model):
         return self.student_name +' Unidad: ' + self.unit
     
 
+class CalificacionBabies(models.Model):
+    student_name = models.CharField(max_length=100)
+    level = models.CharField(max_length=50)
+    unit = models.CharField(max_length=50)
+    unit_exam_grade = models.DecimalField(max_digits=5, decimal_places=2)
+    speaking_grade = models.DecimalField(max_digits=5, decimal_places=2)
+    spelling_grade = models.DecimalField(max_digits=5, decimal_places=2)
+    pronunciation_grade = models.DecimalField(max_digits=5, decimal_places=2)
+    unit_exam_porcentage = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    speaking_porcentage = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    spelling_porcentage = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    pronunciation_porcentage = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    total_porcentage = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+
+    def final_average(self):
+        return (self.unit_exam_grade * 0.4) + (self.speaking_grade * 0.2) + (self.spelling_grade * 0.2) + (self.pronunciation_grade*0.2)
+    
+
+    def save(self, *args, **kwargs):
+        #Calculando percentage column
+        self.unit_exam_porcentage = self.unit_exam_grade * 4
+        self.speaking_porcentage = self.speaking_grade * 2
+        self.spelling_porcentage = self.spelling_grade * 2
+        self.pronunciation_porcentage = self.pronunciation_grade * 2
+
+        #Calcular percentage total
+        self.total_porcentage = self.unit_exam_porcentage + self.speaking_porcentage + self.spelling_porcentage + self.pronunciation_porcentage
+
+        super().save(*args,**kwargs)
+    
+    def __str__(self):
+        return self.student_name +' Unidad: ' + self.unit
+
+
 class Group(models.Model):
     name = models.CharField(max_length=50)
     level = models.CharField(max_length=50)
@@ -96,6 +130,36 @@ class Group(models.Model):
 
     def __str__(self):
         return self.name
+
+    def has_assignment_this_week(self):
+        # Obtener las fechas de inicio y fin de la semana actual
+        start_of_week = Attendance.get_start_week_date()
+        end_of_week = Attendance.get_end_week_date()
+
+        # Ahora, verificamos si hay alguna asignación para este grupo en la semana actual.
+        assignments_this_week = self.attendance_set.filter(creation_date__gte=start_of_week, creation_date__lte=end_of_week)
+
+        return assignments_this_week.exists()
+    
+    def has_plan_this_week(self):
+    # Obtener las fechas de inicio y fin de la semana actual
+        start_of_week = Plan.get_start_week_date()  # Asumiendo que Plan tiene un método similar
+        end_of_week = Plan.get_end_week_date()      # Asumiendo que Plan tiene un método similar
+
+        # Ahora, verificamos si hay algún plan para este grupo en la semana actual.
+        plans_this_week = self.plan_set.filter(creation_date__gte=start_of_week, creation_date__lte=end_of_week)
+
+        return plans_this_week.exists()
+    
+    def has_performance_this_week(self):
+        # Obtener las fechas de inicio y fin de la semana actual
+        start_of_week = Performance.get_start_week_date()  # Asumiendo que Performance tiene un método similar
+        end_of_week = Performance.get_end_week_date()      # Asumiendo que Performance tiene un método similar
+
+        # Ahora, verificamos si hay alguna actuación para este grupo en la semana actual.
+        performances_this_week = self.performance_set.filter(creation_date__gte=start_of_week, creation_date__lte=end_of_week)
+
+        return performances_this_week.exists()
 
 
 class Plan(models.Model):
@@ -110,16 +174,18 @@ class Plan(models.Model):
     day = models.CharField(
         max_length=10,
         choices=DAY_CHOICES,
+        null=True, 
+        blank=True
     )
-    topic = models.CharField(max_length=50)
-    unit = models.CharField(max_length=50)
-    clase = models.CharField(max_length=50)
-    semana = models.CharField(max_length=50, null=True)
-    activities = models.TextField(max_length=500)
-    book_pages = models.TextField(max_length=100)
-    resources = models.TextField(max_length=500)
-    expected_learning = models.TextField(max_length=500)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE)
+    topic = models.CharField(max_length=50, null=True, blank=True)
+    unit = models.CharField(max_length=50, null=True, blank=True)
+    clase = models.CharField(max_length=50, null=True, blank=True)
+    semana = models.CharField(max_length=50, null=True, blank=True)
+    activities = models.TextField(max_length=500, null=True, blank=True)
+    book_pages = models.TextField(max_length=100, null=True, blank=True)
+    resources = models.TextField(max_length=500, null=True, blank=True)
+    expected_learning = models.TextField(max_length=500, null=True, blank=True)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, editable=False)
     last_modified_date = models.DateTimeField(auto_now=True)
@@ -177,11 +243,11 @@ class Plan(models.Model):
         start_week_datetime = Plan.get_start_week_date(today)
         end_week_datetime = Plan.get_end_week_date(start_week_datetime)
 
-        month_names = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         if start_week_datetime.month != end_week_datetime.month:
-            label = "Semana: {} {} - {} {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, month_names[end_week_datetime.month - 1], end_week_datetime.day)
+            label = "{} {} - {} {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, month_names[end_week_datetime.month - 1], end_week_datetime.day)
         else:
-            label = "{} Semana: {}-{}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
+            label = "{} {}-{}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
 
         return label
 
@@ -193,11 +259,11 @@ class Plan(models.Model):
         start_week_datetime = Performance.get_start_week_date(creation)
         end_week_datetime = Performance.get_end_week_date(start_week_datetime)
 
-        month_names = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         if start_week_datetime.month != end_week_datetime.month:
             label = "{} {} - {} {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, month_names[end_week_datetime.month - 1], end_week_datetime.day)
         else:
-            label = "{} semana {}-{}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
+            label = "{} {}-{}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
 
         return label
     
@@ -264,11 +330,11 @@ class Performance(models.Model):
         start_week_datetime = Performance.get_start_week_date(today)
         end_week_datetime = Performance.get_end_week_date(start_week_datetime)
 
-        month_names = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         if start_week_datetime.month != end_week_datetime.month:
             label = "{} {} - {} {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, month_names[end_week_datetime.month - 1], end_week_datetime.day)
         else:
-            label = "{} semana {}-{}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
+            label = "{} {}-{}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
 
         return label
     
@@ -281,19 +347,20 @@ class Performance(models.Model):
         start_week_datetime = Performance.get_start_week_date(creation)
         end_week_datetime = Performance.get_end_week_date(start_week_datetime)
 
-        month_names = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         if start_week_datetime.month != end_week_datetime.month:
             label = "{} {} - {} {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, month_names[end_week_datetime.month - 1], end_week_datetime.day)
         else:
-            label = "{} semana {}-{}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
+            label = "{} Semana: {}-{}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
 
         return label
     
 
 class StudentEntry(models.Model):
-    student_name = models.CharField(max_length=60)
-    comments = models.TextField(max_length=600)
+    student_name = models.CharField(max_length=60, null=True, blank=True)
+    comments = models.TextField(max_length=600, null=True, blank=True)
     performance = models.ForeignKey(Performance, on_delete=models.CASCADE, related_name='entries')
+
 
 class Attendance(models.Model):
     semana = models.CharField(max_length=60)
@@ -311,17 +378,19 @@ class Attendance(models.Model):
     def __str__(self):
         formatted_date = self.creation_date.astimezone(timezone.get_current_timezone()).strftime("%Y-%m-%d %H:%M:%S")
         group_name = self.group.name if self.group else "No Group"
-        return f"{group_name}, Performance: {formatted_date}, Teacher: {self.user}"
+        return f"{group_name}, Attendance: {formatted_date}, Teacher: {self.user}"
     
 
     @staticmethod
     def is_within_deadline():
         """ Comprueba si la fecha y hora actual está dentro del plazo de la semana actual """
-        now = timezone.now()
+        now = timezone.localtime(timezone.now())
         # Obtener el próximo sábado
         next_saturday = now + timedelta((5-now.weekday()) % 7)
         # Establecer la hora a las 5 pm
         deadline_time = next_saturday.replace(hour=17, minute=0, second=0, microsecond=0)
+        print("Now:", now)
+        print("Deadline:", deadline_time)
         return now <= deadline_time
     
     def save(self, *args, **kwargs):
@@ -358,11 +427,11 @@ class Attendance(models.Model):
         start_week_datetime = Performance.get_start_week_date(today)
         end_week_datetime = Performance.get_end_week_date(start_week_datetime)
 
-        month_names = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         if start_week_datetime.month != end_week_datetime.month:
             label = "{} {} - {} {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, month_names[end_week_datetime.month - 1], end_week_datetime.day)
         else:
-            label = "{} semana {}-{}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
+            label = "{} {} - {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
 
         return label
     
@@ -375,21 +444,37 @@ class Attendance(models.Model):
         start_week_datetime = Performance.get_start_week_date(creation)
         end_week_datetime = Performance.get_end_week_date(start_week_datetime)
 
-        month_names = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"]
+        month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         if start_week_datetime.month != end_week_datetime.month:
             label = "{} {} - {} {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, month_names[end_week_datetime.month - 1], end_week_datetime.day)
         else:
-            label = "{} semana {}-{}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
+            label = "{} {} - {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
 
         return label
 
 
 class AttendanceEntry(models.Model):
-    student_name = models.CharField(max_length=60)
-    attendance = models.ForeignKey(Attendance, on_delete=models.CASCADE, related_name='entries')
-    monday = models.CharField(max_length=1)
-    tuesday = models.CharField(max_length=1)
-    wednesday = models.CharField(max_length=1)
-    thursday = models.CharField(max_length=1)
-    friday = models.CharField(max_length=1)
+    student_name = models.CharField(max_length=60, null=True, blank=True)
+    attendance = models.ForeignKey(Attendance, on_delete=models.CASCADE, related_name='entries', null=True, blank=True)
+    monday = models.CharField(max_length=1, null=True, blank=True)
+    tuesday = models.CharField(max_length=1, null=True, blank=True)
+    wednesday = models.CharField(max_length=1, null=True, blank=True)
+    thursday = models.CharField(max_length=1, null=True, blank=True)
+    friday = models.CharField(max_length=1, null=True, blank=True)
+
+
+class ResponsibilityNote(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE) # Relación uno a uno con User
+    note = models.CharField(max_length=255) # Nota o comentario
+
+    def __str__(self):
+        return f"{self.user.username} - {self.note}"
+    
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment_text = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.timestamp.strftime('%Y-%m-%d %H:%M')}"
 

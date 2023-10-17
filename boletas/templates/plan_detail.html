@@ -1,43 +1,43 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<main class="container-fluid py-5">
+    <section class="card card-body">
+        <h1 class="display-4 text-center mb-4">Detalle de Plan</h1>
 
-<h1>Detalle de Plan</h1>
-    <p><strong>Profesor:</strong> {{ profesor }}</p>
-    <p><strong>Semana:</strong> {{ current_week_label }}</p>
+        <p class="lead"><strong>Professor:</strong> {{ profesor }}</p>
+        <p class="lead"><strong>Week:</strong> {{ current_week_label }}</p>
+        <p class="lead"><strong>Group:</strong> {{ group }}</p>
 
-    <!-- Mostrar los datos de la performance -->
-   
-
-    <!-- Mostrar los datos de los estudiantes -->
-    <table>
-        <thead>
-            <tr>
-                <th>Day</th>
-                <th>Topic</th>
-                <th>Unit</th>
-                <th>Class</th>
-                <th>Activities</th>
-                <th>Book Pages</th>
-                <th>Resources</th>
-                <th>Expected Learning</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for entry in formset %}
-            <tr>
-                <td>{{ entry.day.value }}</td>
-                <td>{{ entry.topic.value }}</td>
-                <td>{{ entry.unit.value }}</td>
-                <td>{{ entry.clase.value }}</td>
-                <td>{{ entry.activities.value }}</td>
-                <td>{{ entry.book_pages.value }}</td>
-                <td>{{ entry.resources.value }}</td>
-                <td>{{ entry.expected_learning.value }}</td>
-
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
+        <!-- Mostrar los datos de los estudiantes -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Day</th>
+                    <th>Topic</th>
+                    <th>Unit</th>
+                    <th>Class</th>
+                    <th>Activities</th>
+                    <th>Book Pages</th>
+                    <th>Resources</th>
+                    <th>Expected Learning</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in formset %}
+                <tr>
+                    <td>{{ entry.day.value }}</td>
+                    <td>{{ entry.topic.value }}</td>
+                    <td>{{ entry.unit.value }}</td>
+                    <td>{{ entry.clase.value }}</td>
+                    <td>{{ entry.activities.value }}</td>
+                    <td>{{ entry.book_pages.value }}</td>
+                    <td>{{ entry.resources.value }}</td>
+                    <td>{{ entry.expected_learning.value }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</main>
 {% endblock %}

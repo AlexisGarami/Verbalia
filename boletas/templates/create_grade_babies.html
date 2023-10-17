@@ -3,7 +3,7 @@
 {% block content %}
     <main class="container py-5">
         <section class="card card-body">
-            <h1 class="display-4 text-center mb-4">Create Grade Kids</h1>
+            <h1 class="display-4 text-center mb-4">Create Grade Babies</h1>
             <form method="POST" class="mb-4">
                 {% csrf_token %}
                 
@@ -25,8 +25,8 @@
                 {{ form.spelling_grade.label_tag }} 
                 {{ form.spelling_grade }}
 
-                {{ form.verbs_grade.label_tag }} 
-                {{ form.verbs_grade }}
+                {{ form.pronunciation_grade.label_tag }} 
+                {{ form.pronunciation_grade }}
 
                 <button class="btn btn-dark mt-3">
                     Save

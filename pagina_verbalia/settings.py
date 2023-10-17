@@ -63,6 +63,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'boletas.context_processors.assignment_check',
+                'boletas.context_processors.plan_check',
+                'boletas.context_processors.performance_check',
             ],
         },
     },
@@ -76,11 +79,14 @@ WSGI_APPLICATION = 'pagina_verbalia.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mydbverbalia',
+        'USER': 'mydbuser',
+        'PASSWORD': '123456789',
+        'HOST': 'localhost',
+        'PORT':'5432' 
+        }
     }
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

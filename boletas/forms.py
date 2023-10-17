@@ -1,5 +1,5 @@
 from django.forms import ModelForm, inlineformset_factory
-from .models import Task, Calificacion, Plan, Performance, StudentEntry, Attendance, AttendanceEntry, CalificacionAdult
+from .models import Task, Calificacion, Plan, Performance, StudentEntry, Attendance, AttendanceEntry, CalificacionAdult, CalificacionBabies, ResponsibilityNote, Comment
 from django import forms
 
 
@@ -22,6 +22,22 @@ class GradeForm(ModelForm):
             'spelling_grade': forms.NumberInput(attrs={'class': 'form-control'}),
             'verbs_grade': forms.NumberInput(attrs={'class': 'form-control'}),
         }
+
+class GradeBabiesForm(ModelForm):
+    class Meta:
+        model = CalificacionBabies
+        fields = ['student_name', 'level', 'unit', 'unit_exam_grade', 'speaking_grade', 'spelling_grade', 'pronunciation_grade', ]
+
+        widgets = {
+            'student_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'level': forms.TextInput(attrs={'class': 'form-control'}),
+            'unit': forms.TextInput(attrs={'class': 'form-control'}),
+            'unit_exam_grade': forms.NumberInput(attrs={'class': 'form-control'}),
+            'speaking_grade': forms.NumberInput(attrs={'class': 'form-control'}),
+            'spelling_grade': forms.NumberInput(attrs={'class': 'form-control'}),
+            'pronunciation_grade': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+
 
 class GradeAdultForm(ModelForm):
     class Meta:
@@ -46,7 +62,7 @@ class PlanForm(ModelForm):
 
         widgets = {
             'day': forms.Select(attrs={'class': 'form-control'}),
-            'topic': forms.TextInput(attrs={'class': 'form-control'}),
+            'topic': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'unit': forms.TextInput(attrs={'class': 'form-control'}),
             'clase': forms.TextInput(attrs={'class': 'form-control'}),
             'activities': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
@@ -88,3 +104,14 @@ class AttendanceEntryForm(ModelForm):
             'thursday': forms.TextInput(attrs={'class': 'form-control'}),
             'friday': forms.TextInput(attrs={'class': 'form-control'}),
         }
+
+class ResponsibilityNoteForm(forms.ModelForm):
+    class Meta:
+        model = ResponsibilityNote
+        fields = ['note']
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['comment_text']

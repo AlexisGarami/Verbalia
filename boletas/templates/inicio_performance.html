@@ -11,7 +11,7 @@
             {% for group in groups %}
             <li class="my-2">
                 {% if group.performance %}
-                    <a href="{% url 'edit_performance' group.performance.id %}" class="btn btn-dark">{{ group.name }} ✅ Editar </a>
+                    <a href="{% url 'edit_performance' group.performance.id %}" class="btn btn-dark">{{ group.name }} ✓ Editar </a>
                 {% else %}
                     <a href="{% url 'select_student_count' group.id %}" class="btn btn-secondary">{{ group.name }}</a>
                 {% endif %}
