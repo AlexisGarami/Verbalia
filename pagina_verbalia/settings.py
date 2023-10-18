@@ -28,7 +28,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['abiding-tank-production.up.railway.app',
                  'verbalia-production.up.railway.app',]
 
-CSRF_TRUSTED_ORIGINS = 'https://verbalia-production.up.railway.app'
 
 # Application definition
 
@@ -41,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'boletas'
 ]
+
+CSRF_TRUSTED_ORIGINS = 'https://verbalia-production.up.railway.app'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
