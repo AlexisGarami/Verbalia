@@ -1,1 +1,1 @@
-web: gunicorn VERBALIA.wsgi:application --log-file -
+web: python manage.py migrate && gunicorn VERBALIA.wsgi
