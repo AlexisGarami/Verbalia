@@ -80,11 +80,11 @@ WSGI_APPLICATION = 'pagina_verbalia.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'mydbverbalia',
-        'USER': 'mydbuser',
-        'PASSWORD': '123456789',
-        'HOST': 'localhost',
-        'PORT':'5432' 
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': '4yGVU5g7UnKs0A8m51eL',
+        'HOST': 'containers-us-west-57.railway.app',
+        'PORT':'7374' 
         }
     }
 
