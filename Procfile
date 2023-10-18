@@ -1,1 +1,1 @@
-web: python manage.py migrate && gunicorn VERBALIA.wsgi
+web: python manage.py migrate && gunicorn verbalia.wsgi
