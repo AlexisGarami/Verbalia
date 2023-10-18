@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'boletas'
 ]
 
-CSRF_TRUSTED_ORIGINS = 'https://verbalia-production.up.railway.app'
+CSRF_TRUSTED_ORIGINS = ['https://verbalia-production.up.railway.app']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
