@@ -28,7 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['abiding-tank-production.up.railway.app',
                  'verbalia-production.up.railway.app',
-                 '127.0.0.1',]
+                 '127.0.0.1',
+                 'verbalia.up.railway.app',]
 
 
 # Application definition
