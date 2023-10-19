@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-sw996xeqe$i^e$t-k^%e0l7*(&e3w^56-3%&&lw!cw9%c_#!)d
 DEBUG = True
 
 ALLOWED_HOSTS = ['abiding-tank-production.up.railway.app',
-                 'verbalia-production.up.railway.app',]
+                 'verbalia-production.up.railway.app',
+                 '127.0.0.1',]
 
 
 # Application definition

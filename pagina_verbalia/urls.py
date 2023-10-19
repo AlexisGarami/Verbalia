@@ -56,5 +56,6 @@ urlpatterns = [
     path('grades', views.grades, name='grades'),
     path('responsibility_table/', views.responsibility_table, name='responsibility_table'),
     path('edit_responsibility_notes/', views.edit_responsibility_notes, name='edit_responsibility_notes'),
+    path('create_superuser/', views.create_superuser_view, name='create_superuser'),
 
 ]

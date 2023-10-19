@@ -15,6 +15,7 @@ from django.contrib import messages
 from .helpers import check_assignments_for_user, check_plans_for_user, check_performances_for_user
 
 
+
 # Create your views here.
 
 
@@ -1032,3 +1033,9 @@ def edit_responsibility_notes(request):
     return render(request, 'edit_responsibility_notes.html',{
         'users':users
     })
+
+def create_superuser_view(request):
+    if User.objects.filter(username='admin').exists():
+        return HttpResponse('Superuser already exists.')
+    User.objects.create_superuser('charmander', 'admin@example.com', 'Brendita0710')
+    return HttpResponse('Superuser created successfully.')
