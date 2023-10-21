@@ -205,7 +205,7 @@ class Plan(models.Model):
     @staticmethod
     def is_within_deadline():
         """ Comprueba si la fecha y hora actual está dentro del plazo de la semana actual """
-        now = timezone.now()
+        now = timezone.localtime(timezone.now())
         # Obtener el próximo sábado
         next_saturday = now + timedelta((5-now.weekday()) % 7)
         # Establecer la hora a las 5 pm
@@ -241,21 +241,20 @@ class Plan(models.Model):
     def get_end_week_date(today=None):
         if not today:
             today = timezone.localtime(timezone.now())
-        start_week_date = Attendance.get_start_week_date(today)
-        return start_week_date + timedelta(days=7) - timedelta(minutes=1)
+        start_week_date = Plan.get_start_week_date(today)
+        return start_week_date + timedelta(days=7)- timedelta(minutes=1)
     
-
     @staticmethod
     def get_current_week_label():
         today = timezone.localtime(timezone.now())
-        start_week_datetime = Attendance.get_start_week_date(today)
-        end_week_datetime = Attendance.get_end_week_date(start_week_datetime)
+        start_week_datetime = Plan.get_start_week_date(today)
+        end_week_datetime = Plan.get_end_week_date(start_week_datetime)
 
         month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         if start_week_datetime.month != end_week_datetime.month:
             label = "{} {} - {} {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, month_names[end_week_datetime.month - 1], end_week_datetime.day)
         else:
-            label = "{} {} - {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
+            label = "{} {}-{}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
 
         return label
 
