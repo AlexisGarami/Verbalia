@@ -223,10 +223,17 @@ class Plan(models.Model):
             today = datetime.now()
 
         # Determinar el último sábado a las 5:01 pm
-        if today.weekday() == 5 and today.time() > time(17,1):
+        if today.weekday() == 5 and today.time() >= time(17,1):  
             return datetime.combine(today.date(), time(17, 1))
+
+        # Si es sábado pero antes de las 5:01 pm
+        elif today.weekday() == 5 and today.time() < time(17,1):
+            last_saturday = today - timedelta(weeks=1)
+            return datetime.combine(last_saturday, time(17, 1))
+
+        # Para cualquier otro día (de domingo a viernes)
         else:
-            last_saturday = today - timedelta(days=(today.weekday() - 5) % 7, hours=today.hour, minutes=today.minute, seconds=today.second, microseconds=today.microsecond)
+            last_saturday = today - timedelta(days=(today.weekday() - 5) % 7)
             return datetime.combine(last_saturday, time(17, 1))
         
 
@@ -309,10 +316,17 @@ class Performance(models.Model):
             today = datetime.now()
 
         # Determinar el último sábado a las 5:01 pm
-        if today.weekday() == 5 and today.time() > time(17, 1):
+        if today.weekday() == 5 and today.time() >= time(17,1):  
             return datetime.combine(today.date(), time(17, 1))
+
+        # Si es sábado pero antes de las 5:01 pm
+        elif today.weekday() == 5 and today.time() < time(17,1):
+            last_saturday = today - timedelta(weeks=1)
+            return datetime.combine(last_saturday, time(17, 1))
+
+        # Para cualquier otro día (de domingo a viernes)
         else:
-            last_saturday = today - timedelta(days=(today.weekday() - 5) % 7, hours=today.hour, minutes=today.minute, seconds=today.second, microseconds=today.microsecond)
+            last_saturday = today - timedelta(days=(today.weekday() - 5) % 7)
             return datetime.combine(last_saturday, time(17, 1))
         
 
@@ -406,10 +420,17 @@ class Attendance(models.Model):
             today = datetime.now()
 
         # Determinar el último sábado a las 5:01 pm
-        if today.weekday() == 5 and today.time() > time(17, 1):
+        if today.weekday() == 5 and today.time() >= time(17,1):  
             return datetime.combine(today.date(), time(17, 1))
+
+        # Si es sábado pero antes de las 5:01 pm
+        elif today.weekday() == 5 and today.time() < time(17,1):
+            last_saturday = today - timedelta(weeks=1)
+            return datetime.combine(last_saturday, time(17, 1))
+
+        # Para cualquier otro día (de domingo a viernes)
         else:
-            last_saturday = today - timedelta(days=(today.weekday() - 5) % 7, hours=today.hour, minutes=today.minute, seconds=today.second, microseconds=today.microsecond)
+            last_saturday = today - timedelta(days=(today.weekday() - 5) % 7)
             return datetime.combine(last_saturday, time(17, 1))
         
 
