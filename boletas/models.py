@@ -417,39 +417,36 @@ class Attendance(models.Model):
     @staticmethod
     def get_start_week_date(today=None):
         if not today:
-            today = datetime.now()
-
-        # Añade 6 horas a la fecha y hora actual
-        adjusted_today = today + timedelta(hours=6)
+            today = timezone.localtime(timezone.now())
 
         # Determinar el último sábado a las 5:01 pm
-        if adjusted_today.weekday() == 5 and adjusted_today.time() >= time(17,1):  
-            return datetime.combine(adjusted_today.date(), time(17, 1))
+        if today.weekday() == 5 and today.time() >= time(17,1):  
+            return datetime.combine(today.date(), time(17, 1))
 
         # Si es sábado pero antes de las 5:01 pm
-        elif adjusted_today.weekday() == 5 and adjusted_today.time() < time(17,1):
-            last_saturday = adjusted_today - timedelta(weeks=1)
+        elif today.weekday() == 5 and today.time() < time(17,1):
+            last_saturday = today - timedelta(weeks=1)
             return datetime.combine(last_saturday, time(17, 1))
 
         # Para cualquier otro día (de domingo a viernes)
         else:
-            last_saturday = adjusted_today - timedelta(days=(adjusted_today.weekday() - 5) % 7)
+            last_saturday = today - timedelta(days=(today.weekday() - 5) % 7)
             return datetime.combine(last_saturday, time(17, 1))
         
 
     @staticmethod
     def get_end_week_date(today=None):
         if not today:
-            today = datetime.now()
-        start_week_date = Performance.get_start_week_date(today)
-        return start_week_date + timedelta(days=7)- timedelta(minutes=1)
+            today = timezone.localtime(timezone.now())
+        start_week_date = Attendance.get_start_week_date(today)
+        return start_week_date + timedelta(days=7) - timedelta(minutes=1)
     
 
     @staticmethod
     def get_current_week_label():
-        today = datetime.now()
-        start_week_datetime = Performance.get_start_week_date(today)
-        end_week_datetime = Performance.get_end_week_date(start_week_datetime)
+        today = timezone.localtime(timezone.now())
+        start_week_datetime = Attendance.get_start_week_date(today)
+        end_week_datetime = Attendance.get_end_week_date(start_week_datetime)
 
         month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         if start_week_datetime.month != end_week_datetime.month:
