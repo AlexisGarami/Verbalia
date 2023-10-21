@@ -419,18 +419,21 @@ class Attendance(models.Model):
         if not today:
             today = datetime.now()
 
+        # Añade 6 horas a la fecha y hora actual
+        adjusted_today = today + timedelta(hours=6)
+
         # Determinar el último sábado a las 5:01 pm
-        if today.weekday() == 5 and today.time() >= time(17,1):  
-            return datetime.combine(today.date(), time(17, 1))
+        if adjusted_today.weekday() == 5 and adjusted_today.time() >= time(17,1):  
+            return datetime.combine(adjusted_today.date(), time(17, 1))
 
         # Si es sábado pero antes de las 5:01 pm
-        elif today.weekday() == 5 and today.time() < time(17,1):
-            last_saturday = today - timedelta(weeks=1)
+        elif adjusted_today.weekday() == 5 and adjusted_today.time() < time(17,1):
+            last_saturday = adjusted_today - timedelta(weeks=1)
             return datetime.combine(last_saturday, time(17, 1))
 
         # Para cualquier otro día (de domingo a viernes)
         else:
-            last_saturday = today - timedelta(days=(today.weekday() - 5) % 7)
+            last_saturday = adjusted_today - timedelta(days=(adjusted_today.weekday() - 5) % 7)
             return datetime.combine(last_saturday, time(17, 1))
         
 
