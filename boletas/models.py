@@ -220,7 +220,7 @@ class Plan(models.Model):
     @staticmethod
     def get_start_week_date(today=None):
         if not today:
-            today = datetime.now()
+            today = timezone.localtime(timezone.now())
 
         # Determinar el último sábado a las 5:01 pm
         if today.weekday() == 5 and today.time() >= time(17,1):  
@@ -240,21 +240,22 @@ class Plan(models.Model):
     @staticmethod
     def get_end_week_date(today=None):
         if not today:
-            today = datetime.now()
-        start_week_date = Plan.get_start_week_date(today)
-        return start_week_date + timedelta(days=7)- timedelta(minutes=1)
+            today = timezone.localtime(timezone.now())
+        start_week_date = Attendance.get_start_week_date(today)
+        return start_week_date + timedelta(days=7) - timedelta(minutes=1)
     
+
     @staticmethod
     def get_current_week_label():
-        today = datetime.now()
-        start_week_datetime = Plan.get_start_week_date(today)
-        end_week_datetime = Plan.get_end_week_date(start_week_datetime)
+        today = timezone.localtime(timezone.now())
+        start_week_datetime = Attendance.get_start_week_date(today)
+        end_week_datetime = Attendance.get_end_week_date(start_week_datetime)
 
         month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         if start_week_datetime.month != end_week_datetime.month:
             label = "{} {} - {} {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, month_names[end_week_datetime.month - 1], end_week_datetime.day)
         else:
-            label = "{} {}-{}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
+            label = "{} {} - {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
 
         return label
 
@@ -313,7 +314,7 @@ class Performance(models.Model):
     @staticmethod
     def get_start_week_date(today=None):
         if not today:
-            today = datetime.now()
+            today = timezone.localtime(timezone.now())
 
         # Determinar el último sábado a las 5:01 pm
         if today.weekday() == 5 and today.time() >= time(17,1):  
@@ -333,22 +334,22 @@ class Performance(models.Model):
     @staticmethod
     def get_end_week_date(today=None):
         if not today:
-            today = datetime.now()
-        start_week_date = Performance.get_start_week_date(today)
-        return start_week_date + timedelta(days=7)- timedelta(minutes=1)
+            today = timezone.localtime(timezone.now())
+        start_week_date = Attendance.get_start_week_date(today)
+        return start_week_date + timedelta(days=7) - timedelta(minutes=1)
     
 
     @staticmethod
     def get_current_week_label():
-        today = datetime.now()
-        start_week_datetime = Performance.get_start_week_date(today)
-        end_week_datetime = Performance.get_end_week_date(start_week_datetime)
+        today = timezone.localtime(timezone.now())
+        start_week_datetime = Attendance.get_start_week_date(today)
+        end_week_datetime = Attendance.get_end_week_date(start_week_datetime)
 
         month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         if start_week_datetime.month != end_week_datetime.month:
             label = "{} {} - {} {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, month_names[end_week_datetime.month - 1], end_week_datetime.day)
         else:
-            label = "{} {}-{}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
+            label = "{} {} - {}".format(month_names[start_week_datetime.month - 1], start_week_datetime.day, end_week_datetime.day)
 
         return label
     
