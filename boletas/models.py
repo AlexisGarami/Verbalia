@@ -42,7 +42,7 @@ class CalificacionAdult(models.Model):
         self.speaking_porcentage = self.speaking_grade * 2
         self.spelling_porcentage = self.spelling_grade * 1
         self.verbs_porcentage = self.verbs_grade * 1
-        self.writing_porcentage = self.verbs_grade * 1
+        self.writing_porcentage = self.writing_grade * 1
 
         #Calcular percentage total
         self.total_porcentage = self.unit_exam_porcentage + self.speaking_porcentage + self.spelling_porcentage + self.verbs_porcentage + self.writing_porcentage
