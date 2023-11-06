@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="container py-5">
+    <section class="card card-body">
+        <h1 class="display-4 text-center mb-4">Current Plans</h1>
+
+        <hr> 
+
+        <ul class="list-unstyled text-center"> 
+            {% for group in groups %}
+            <li class="my-2">
+                    <a href="{% url 'current_plan' group.plan.id %}" class="btn btn-dark">{{ group.name }} </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+</main>
+{% endblock %}

@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.forms import formset_factory
 from django.contrib import messages
 from .helpers import check_assignments_for_user, check_plans_for_user, check_performances_for_user
+from datetime import timedelta
 
 
 
@@ -972,7 +973,7 @@ def grades(request):
 
 def responsibility_table(request):
     
-    excluded_users = ['mireyaramirez', 'gabrielpeña', 'charmander']
+    excluded_users = ['mireyaramirez', 'gabrielpeña', 'charmander', 'jasonmendez', 'alanlopez']
     teachers = User.objects.exclude(username__in=excluded_users).order_by('id')
 
     table_data = []
@@ -1034,8 +1035,42 @@ def edit_responsibility_notes(request):
         'users':users
     })
 
-def create_superuser_view(request):
-    if User.objects.filter(username='admin').exists():
-        return HttpResponse('Superuser already exists.')
-    User.objects.create_superuser('charmander', 'admin@example.com', 'Brendita0710')
-    return HttpResponse('Superuser created successfully.')
+#def create_superuser_view(request):
+    #User.objects.create_superuser('charmander', #'admin@example.com', '')
+    #return HttpResponse('Superuser created successfully.')
+
+def current_plan(request, plan_id):
+    plan_instance = get_object_or_404(Plan, id=plan_id)
+    current_week_label = Plan.get_current_week_label()
+    PlanEntryFormSet = formset_factory(PlanForm, extra=0)
+    profesor = plan_instance.user
+    group = plan_instance.group
+    week = plan_instance.creation_week
+
+    if request.method == 'GET':
+        initial_data = plan_instance.student_data
+        formset = PlanEntryFormSet(initial=initial_data, prefix='plan_entry')
+        form = PlanForm(instance=plan_instance)
+
+        form_data = [getattr(form.instance, field.name) for field in form]
+
+    return render(request, 'current_plan.html', {
+        'formset':formset,
+        'form_data':form_data,
+        'current_week_label':current_week_label,
+        'profesor':profesor,
+        'group':group,
+        'week':week
+    })
+
+def inicio_current_plan(request):
+    current_user = request.user
+    groups = Group.objects.filter(user=current_user)
+
+    last_week_start = Plan.get_start_week_date() - timedelta(weeks=1)
+
+    for group in groups:
+        group.plan = group.plan_set.filter(week_start=last_week_start).first()
+
+
+    return render(request, 'inicio_current_plan.html', {'groups': groups})

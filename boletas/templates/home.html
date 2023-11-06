@@ -13,10 +13,14 @@
 
         <p>A lo largo de esta trayectoria, hemos comprendido que aprender un idioma trasciende las simples lecciones; es una puerta hacia nuevas formas de pensar, sentir y conectarse con el mundo. Únete a nuestra diversa comunidad y descubre cómo, en VERBALIA, el aprendizaje de un idioma se convierte en un viaje hacia un universo repleto de conexiones interculturales.</p>
 
-        <div class="text-center">
-            <a class="btn btn-secondary" href="/signin">Sign In</a>
-            <a class="btn btn-dark" href="/signup">Sign Up</a>
-        </div>
+        {% if user.is_authenticated %}
+
+        {% else %}
+            <div class="text-center">
+                <a class="btn btn-secondary" href="/signin">Sign In</a>
+                <a class="btn btn-dark" href="/signup">Sign Up</a>
+            </div>
+        {% endif %}
     </section>
 </main>
 
