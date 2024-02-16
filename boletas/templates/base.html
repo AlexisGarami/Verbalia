@@ -70,7 +70,7 @@
                 
                     <a href="/inicio_current_plan" class="btn btn-dark rounded-pill mt-2">My Current Plan</a>
             
-                    {% if user.username == "mireyaramirez" or user.username == "alexisgalicia" or user.username == 'alineramirez' or user.username == "gabrielpeña" %}
+                    {% if can_view_menu %}
                     <li class="nav-item  mt-2">
                         <a href="/view_performances" class="nav-link">View Performances</a>
                     </li>

@@ -29,7 +29,8 @@ DEBUG = True
 ALLOWED_HOSTS = ['abiding-tank-production.up.railway.app',
                  'verbalia-production.up.railway.app',
                  '127.0.0.1',
-                 'verbalia.up.railway.app',]
+                 'verbalia.up.railway.app',
+                 'monorail.proxy.rlwy.net',]
 
 
 # Application definition
@@ -74,6 +75,7 @@ TEMPLATES = [
                 'boletas.context_processors.assignment_check',
                 'boletas.context_processors.plan_check',
                 'boletas.context_processors.performance_check',
+                'boletas.context_processors.add_permission_info',
             ],
         },
     },
@@ -90,9 +92,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'railway',
         'USER': 'postgres',
-        'PASSWORD': '4yGVU5g7UnKs0A8m51eL',
-        'HOST': 'containers-us-west-57.railway.app',
-        'PORT':'7374' 
+        'PASSWORD': 'cB13AB5aa3Ca3C6cG31bGFc54bAfDaeC',
+        'HOST': 'monorail.proxy.rlwy.net',
+        'PORT':'40849' 
         }
     }
 

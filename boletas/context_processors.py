@@ -31,3 +31,11 @@ def performance_check(request):
         performances_completados = False
 
     return {'performances_completados':performances_completados}
+
+
+def add_permission_info(request):
+    can_view_menu = request.user.has_perm('boletas.can_view_menu')
+
+    return {
+        'can_view_menu': can_view_menu,
+    }

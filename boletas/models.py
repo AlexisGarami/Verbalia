@@ -177,15 +177,15 @@ class Plan(models.Model):
         null=True, 
         blank=True
     )
-    topic = models.CharField(max_length=50, null=True, blank=True)
+    topic = models.CharField(max_length=100, null=True, blank=True)
     unit = models.CharField(max_length=50, null=True, blank=True)
     clase = models.CharField(max_length=50, null=True, blank=True)
     semana = models.CharField(max_length=50, null=True, blank=True)
-    activities = models.TextField(max_length=500, null=True, blank=True)
-    book_pages = models.TextField(max_length=100, null=True, blank=True)
-    resources = models.TextField(max_length=500, null=True, blank=True)
-    expected_learning = models.TextField(max_length=500, null=True, blank=True)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
+    activities = models.TextField(max_length=800, null=True, blank=True)
+    book_pages = models.TextField(max_length=200, null=True, blank=True)
+    resources = models.TextField(max_length=800, null=True, blank=True)
+    expected_learning = models.TextField(max_length=800, null=True, blank=True)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True, db_index=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, editable=False)
     last_modified_date = models.DateTimeField(auto_now=True)
@@ -278,7 +278,7 @@ class Plan(models.Model):
 class Performance(models.Model):
     semana = models.CharField(max_length=60, null=True)
     creation_date = models.DateTimeField(auto_now_add=True)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True, db_index=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, editable=False)
     last_modified_date = models.DateTimeField(auto_now=True)
     is_submitted = models.BooleanField(default=False)
@@ -379,7 +379,7 @@ class StudentEntry(models.Model):
 class Attendance(models.Model):
     semana = models.CharField(max_length=60)
     creation_date = models.DateTimeField(auto_now_add=True)
-    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, blank=True, db_index=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, editable=False)
     last_modified_date = models.DateTimeField(auto_now=True)
     is_submitted = models.BooleanField(default=False)
@@ -499,3 +499,17 @@ class Comment(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.timestamp.strftime('%Y-%m-%d %H:%M')}"
 
+class FeedbackNote(models.Model):
+    user = models.OneToOneField(User, on_delete = models.CASCADE)
+    feedback = models.TextField()
+
+    def __str__(self):
+        return f"{self.user.username} - Feedback"
+    
+class MenuPermissions(models.Model):
+    class Meta:
+        managed = False  # No se crea una tabla en la base de datos para este modelo
+        default_permissions = ()
+        permissions = (
+            ("can_view_menu", "Puede ver el menú"),
+        )

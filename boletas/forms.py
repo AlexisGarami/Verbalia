@@ -1,5 +1,5 @@
 from django.forms import ModelForm, inlineformset_factory
-from .models import Task, Calificacion, Plan, Performance, StudentEntry, Attendance, AttendanceEntry, CalificacionAdult, CalificacionBabies, ResponsibilityNote, Comment
+from .models import Task, Calificacion, Plan, Performance, StudentEntry, Attendance, AttendanceEntry, CalificacionAdult, CalificacionBabies, ResponsibilityNote, Comment, FeedbackNote
 from django import forms
 
 
@@ -115,3 +115,8 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ['comment_text']
+
+class FeedbackNoteForm(forms.ModelForm):
+    class Meta:
+        model = FeedbackNote
+        fields = ['feedback']
