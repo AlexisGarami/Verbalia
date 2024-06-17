@@ -84,16 +84,16 @@ def generate_pdf(grade_instance, request):
                  'Level:  \n\n' + '       '+grade_instance.level + '        '], [''],
              [' ', 'Unit: ' + grade_instance.unit, ' '], [''],]
   
-    imagen_path = "boletas/pdf_images/firma_gabriel.png"  
-    firma = Image(imagen_path, width=295, height=125)
+    imagen_path = "boletas/pdf_images/firma_gabriel2.png"  
+    firma = Image(imagen_path, width=258, height=80)
 
     data3 = [['','FINAL AVERAGE: \n\n' + str(grade_instance.total_porcentage/10) + '\n',], 
              ['         ',firma,'']]
     
-    path1 = "boletas/pdf_images/LOGO.jpeg"  
-    logo1 = Image(path1, width=60, height=55)
+    path1 = "boletas/pdf_images/verblogo.png"  
+    logo1 = Image(path1, width=72, height=69)
     path2 = "boletas/pdf_images/logo2.png"  
-    logo2 = Image(path2, width=80, height=50)
+    logo2 = Image(path2, width=99, height=60)
 
     data4 = [[logo1,'                  ', '                          Grades Summary\n\n', '                   ', logo2]]
 
@@ -105,26 +105,26 @@ def generate_pdf(grade_instance, request):
 
     table1 = Table(data1)
     style1 = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 1), 'cadetblue'),
+        ('BACKGROUND', (0, 0), (-1, 1), '#b2bf67'),
         ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica'),
         ('FONTSIZE', (0, 0), (-1, -1), 14),
-        ('BACKGROUND', (0, 4), (-1, 5), 'aliceblue'),
-        ('BACKGROUND', (0, 8), (-1, 9), 'aliceblue'),
+        ('BACKGROUND', (0, 4), (-1, 5), '#d2ecef'),
+        ('BACKGROUND', (0, 8), (-1, 9), '#d2ecef'),
     ])
     table1.setStyle(style1)
 
     table2 = Table(data2)
     style2 = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 1), 'cadetblue'),
-        ('BACKGROUND', (0, 2), (-1, -1), 'aliceblue'),
-        ('BACKGROUND', (0, 5), (-1, -1), 'cadetblue'),
+        ('BACKGROUND', (0, 0), (-1, 1), '#b2bf67'),
+        ('BACKGROUND', (0, 2), (-1, -1), 'white'),
+        ('BACKGROUND', (0, 5), (-1, -1), '#6DC5D1'),
         ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
         ('TEXTCOLOR', (0, 5), (-1, -1), 'white'),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica'),
-        ('FONTNAME', (0, 5), (-1, -1), 'Helvetica'),
+        ('FONTNAME', (0, 5), (-1, -1), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 0), (-1, -1), 17),
         ('FONTNAME', (0, 2), (-1, -3), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 2), (-1, -3), 16),
@@ -133,13 +133,12 @@ def generate_pdf(grade_instance, request):
 
     table3 = Table(data3)
     style3 = TableStyle([
-        ('BACKGROUND', (1, 0), (1,0 ), 'cadetblue'),
+        ('BACKGROUND', (1, 0), (1,0 ), '#b2bf67'),
         ('TEXTCOLOR', (0, 0), (-1, 0), 'black'),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 0), (-1, -1), 14),
-        ('GRID', (1, 0), (1, 0), 0.1, 'mintcream'),
-        ('GRID', (1, 0), (1, 0), 0.1, 'lightgrey'),
+        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
     ])
     table3.setStyle(style3)
 
@@ -238,7 +237,7 @@ def generate_pdf2(grade_instance, request):
 
     table1 = Table(data1)
     style1 = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 1), '#FEB941'),
+        ('BACKGROUND', (0, 0), (-1, 1), '#e68619'),
         ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica'),
@@ -250,7 +249,7 @@ def generate_pdf2(grade_instance, request):
 
     table2 = Table(data2)
     style2 = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 1), '#FEB941'),
+        ('BACKGROUND', (0, 0), (-1, 1), '#e68619'),
         ('BACKGROUND', (0, 2), (-1, -1), 'white'),
         ('BACKGROUND', (0, 5), (-1, -1), '#6DC5D1'),
         ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
@@ -266,7 +265,7 @@ def generate_pdf2(grade_instance, request):
 
     table3 = Table(data3)
     style3 = TableStyle([
-        ('BACKGROUND', (1, 0), (1,0 ), '#FEB941'),
+        ('BACKGROUND', (1, 0), (1,0 ), '#e68619'),
         ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
@@ -318,16 +317,16 @@ def generate_pdf3(grade_instance, request):
                  'Level:  \n\n' + '       '+grade_instance.level + '        '], [''],
              [' ', 'Unit: ' + grade_instance.unit, ' '], [''],]
   
-    imagen_path = "boletas/pdf_images/firma_gabriel.png"  
-    firma = Image(imagen_path, width=295, height=125)
+    imagen_path = "boletas/pdf_images/firma_gabriel2.png"  
+    firma = Image(imagen_path, width=258, height=80)
 
     data3 = [['','FINAL AVERAGE: \n\n' + str(grade_instance.total_porcentage/10) + '\n',], 
              ['         ',firma,'']]
     
-    path1 = "boletas/pdf_images/LOGO.jpeg"  
-    logo1 = Image(path1, width=60, height=55)
+    path1 = "boletas/pdf_images/verblogo.png"  
+    logo1 = Image(path1, width=72, height=69)
     path2 = "boletas/pdf_images/logo2.png"  
-    logo2 = Image(path2, width=80, height=50)
+    logo2 = Image(path2, width=99, height=60)
 
     data4 = [[logo1,'                  ', '                          Grades Summary\n\n', '                   ', logo2]]
 
@@ -339,26 +338,26 @@ def generate_pdf3(grade_instance, request):
 
     table1 = Table(data1)
     style1 = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 1), 'cadetblue'),
+        ('BACKGROUND', (0, 0), (-1, 1), '#ffe187'),
         ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica'),
         ('FONTSIZE', (0, 0), (-1, -1), 14),
-        ('BACKGROUND', (0, 4), (-1, 5), 'aliceblue'),
-        ('BACKGROUND', (0, 8), (-1, 9), 'aliceblue'),
+        ('BACKGROUND', (0, 4), (-1, 5), '#d2ecef'),
+        ('BACKGROUND', (0, 8), (-1, 9), '#d2ecef'),
     ])
     table1.setStyle(style1)
 
     table2 = Table(data2)
     style2 = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 1), 'cadetblue'),
-        ('BACKGROUND', (0, 2), (-1, -1), 'aliceblue'),
-        ('BACKGROUND', (0, 5), (-1, -1), 'cadetblue'),
+        ('BACKGROUND', (0, 0), (-1, 1), '#ffe187'),
+        ('BACKGROUND', (0, 2), (-1, -1), 'white'),
+        ('BACKGROUND', (0, 5), (-1, -1), '#6DC5D1'),
         ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
         ('TEXTCOLOR', (0, 5), (-1, -1), 'white'),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica'),
-        ('FONTNAME', (0, 5), (-1, -1), 'Helvetica'),
+        ('FONTNAME', (0, 5), (-1, -1), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 0), (-1, -1), 17),
         ('FONTNAME', (0, 2), (-1, -3), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 2), (-1, -3), 16),
@@ -367,13 +366,12 @@ def generate_pdf3(grade_instance, request):
 
     table3 = Table(data3)
     style3 = TableStyle([
-        ('BACKGROUND', (1, 0), (1,0 ), 'cadetblue'),
+        ('BACKGROUND', (1, 0), (1,0 ), '#ffe187'),
         ('TEXTCOLOR', (0, 0), (-1, 0), 'black'),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
         ('FONTSIZE', (0, 0), (-1, -1), 14),
-        ('GRID', (1, 0), (1, 0), 0.1, 'mintcream'),
-        ('GRID', (1, 0), (1, 0), 0.1, 'lightgrey'),
     ])
     table3.setStyle(style3)
 
