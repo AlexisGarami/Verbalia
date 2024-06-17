@@ -106,7 +106,7 @@ def generate_pdf(grade_instance, request):
     table1 = Table(data1)
     style1 = TableStyle([
         ('BACKGROUND', (0, 0), (-1, 1), '#b2bf67'),
-        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
+        ('TEXTCOLOR', (0, 0), (-1, 0), 'black'),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica'),
         ('FONTSIZE', (0, 0), (-1, -1), 14),
@@ -120,7 +120,7 @@ def generate_pdf(grade_instance, request):
         ('BACKGROUND', (0, 0), (-1, 1), '#b2bf67'),
         ('BACKGROUND', (0, 2), (-1, -1), 'white'),
         ('BACKGROUND', (0, 5), (-1, -1), '#6DC5D1'),
-        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
+        ('TEXTCOLOR', (0, 0), (-1, 0), 'black'),
         ('TEXTCOLOR', (0, 5), (-1, -1), 'white'),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica'),
@@ -138,7 +138,6 @@ def generate_pdf(grade_instance, request):
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 0), (-1, -1), 14),
-        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
     ])
     table3.setStyle(style3)
 
@@ -339,7 +338,7 @@ def generate_pdf3(grade_instance, request):
     table1 = Table(data1)
     style1 = TableStyle([
         ('BACKGROUND', (0, 0), (-1, 1), '#ffe187'),
-        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
+        ('TEXTCOLOR', (0, 0), (-1, 0), 'black'),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica'),
         ('FONTSIZE', (0, 0), (-1, -1), 14),
@@ -353,7 +352,7 @@ def generate_pdf3(grade_instance, request):
         ('BACKGROUND', (0, 0), (-1, 1), '#ffe187'),
         ('BACKGROUND', (0, 2), (-1, -1), 'white'),
         ('BACKGROUND', (0, 5), (-1, -1), '#6DC5D1'),
-        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
+        ('TEXTCOLOR', (0, 0), (-1, 0), 'black'),
         ('TEXTCOLOR', (0, 5), (-1, -1), 'white'),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica'),
@@ -370,7 +369,6 @@ def generate_pdf3(grade_instance, request):
         ('TEXTCOLOR', (0, 0), (-1, 0), 'black'),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
         ('FONTSIZE', (0, 0), (-1, -1), 14),
     ])
     table3.setStyle(style3)
