@@ -105,8 +105,8 @@ def generate_pdf(grade_instance, request):
 
     table1 = Table(data1)
     style1 = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 1), '#b2bf67'),
-        ('TEXTCOLOR', (0, 0), (-1, 0), 'black'),
+        ('BACKGROUND', (0, 0), (-1, 1), '#baca5c'),
+        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica'),
         ('FONTSIZE', (0, 0), (-1, -1), 14),
@@ -117,10 +117,10 @@ def generate_pdf(grade_instance, request):
 
     table2 = Table(data2)
     style2 = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 1), '#b2bf67'),
+        ('BACKGROUND', (0, 0), (-1, 1), '#baca5c'),
         ('BACKGROUND', (0, 2), (-1, -1), 'white'),
         ('BACKGROUND', (0, 5), (-1, -1), '#6DC5D1'),
-        ('TEXTCOLOR', (0, 0), (-1, 0), 'black'),
+        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
         ('TEXTCOLOR', (0, 5), (-1, -1), 'white'),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica'),
@@ -133,8 +133,8 @@ def generate_pdf(grade_instance, request):
 
     table3 = Table(data3)
     style3 = TableStyle([
-        ('BACKGROUND', (1, 0), (1,0 ), '#b2bf67'),
-        ('TEXTCOLOR', (0, 0), (-1, 0), 'black'),
+        ('BACKGROUND', (1, 0), (1,0 ), '#baca5c'),
+        ('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 0), (-1, -1), 14),
